@@ -1,4 +1,4 @@
-package rasterizer;
+package graphics3D;
 
 import java.util.ArrayList;
 

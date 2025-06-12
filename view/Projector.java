@@ -1,4 +1,6 @@
-package rasterizer;
+package view;
+
+import graphics3D.Vertex;
 
 public class Projector {
     private float width;

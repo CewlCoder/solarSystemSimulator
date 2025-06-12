@@ -1,4 +1,4 @@
-package rasterizer;
+package graphics3D;
 
 /**
  * Creates a triangle defined by the vertices first, second and third.

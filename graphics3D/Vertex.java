@@ -1,4 +1,4 @@
-package rasterizer;
+package graphics3D;
 
 /**
  * Creates a vertex of a triangle defined by an x, y and z coordinate.

@@ -2,9 +2,8 @@ package view;
 
 import javax.swing.JPanel;
 
-import rasterizer.Projector;
-import rasterizer.Triangle;
-import rasterizer.Vertex;
+import graphics3D.Triangle;
+import graphics3D.Vertex;
 
 import java.awt.Graphics;
 

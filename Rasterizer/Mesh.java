@@ -6,13 +6,14 @@ public class Mesh {
     private ArrayList<Triangle> triangles;
 
     /**
-     * Creates a mesh based on the specified triangles.
+     * Creates a mesh based on triangles.
      * 
      * @param triangles a list of triangles
      */
     public Mesh(ArrayList<Triangle> triangles) {
         this.triangles = triangles;
     }
+
 
 
     /**

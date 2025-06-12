@@ -1,12 +1,10 @@
 package rasterizer;
 
-import java.util.Vector;
-
 /**
- * Creates a triangle defined by the vectors first, second and third.
+ * Creates a triangle defined by the vertices first, second and third.
  * 
- * @param first first vector of triangle
- * @param second second vector of triangle
- * @param third third vector of triangle
+ * @param first first vertex of triangle
+ * @param second second vertex of triangle
+ * @param third third vertex of triangle
  */
-public record Triangle(Vector<Float> first, Vector<Float> second, Vector<Float> third) {};
+public record Triangle(Vertex first, Vertex second, Vertex third) {}

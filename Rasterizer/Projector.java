@@ -25,22 +25,15 @@ public class Projector {
      */
     public Vertex project(Vertex vertex) {
         float screenSpaceWidth = 5;
-        float screenSpaceHeight = 1;
+        float worldSpaceToScreenRatio = width / screenSpaceWidth;
 
-    
-    
-        float worldSpaceWidthToScreenRatio = width / screenSpaceWidth;
-        float worldSpaceHeighToScreenRatio = height / screenSpaceHeight;
-
-        float vertexDepth = vertex.z();
-
-        float xScreenSpace = worldSpaceWidthToScreenRatio * vertex.x() / vertexDepth;
-        float yScreenSpace = worldSpaceHeighToScreenRatio * vertex.y() / vertexDepth;
+        float xScreenSpace = worldSpaceToScreenRatio * vertex.x() / vertex.z();
+        float yScreenSpace = height - (worldSpaceToScreenRatio * vertex.y() / vertex.z());
 
         float centerXScreenSpace = width/2 + xScreenSpace;
-        float centerYScreenSpace = height/2 + yScreenSpace;
+        float centerYScreenSpace = yScreenSpace - height/2;
 
-        return new Vertex(centerXScreenSpace, centerYScreenSpace, vertexDepth);
+        return new Vertex(centerXScreenSpace, centerYScreenSpace, vertex.z());
     }
 
 }

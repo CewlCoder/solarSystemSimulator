@@ -1,5 +1,6 @@
 package graphics3D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vector {
@@ -12,6 +13,8 @@ public class Vector {
      * @param y y coordinate
      */
     public Vector(double x, double y) {
+        components = new ArrayList<>();
+
         components.add(x);
         components.add(y);
     }
@@ -24,6 +27,8 @@ public class Vector {
      * @param z z coordinate
      */
     public Vector(double x, double y, double z) {
+        components = new ArrayList<>();
+
         components.add(x);
         components.add(y);
         components.add(z);

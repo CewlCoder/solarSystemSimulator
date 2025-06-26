@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Vector {
-    List<Double> components;
+    private List<Double> components;
 
     /**
      * Creates a vector defined by an x and y coordinate.
@@ -59,7 +59,7 @@ public class Vector {
         float sum = 0;
 
         for (double component : components) {
-            sum += component;
+            sum += component * component;
         }
 
         return Math.sqrt(sum);

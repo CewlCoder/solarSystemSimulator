@@ -1,10 +1,10 @@
 package graphics3D;
 
 /**
- * Creates a triangle defined by the vertices first, second and third.
+ * Creates a triangle defined by the vertices a, b and c.
  * 
- * @param first first vertex of triangle
- * @param second second vertex of triangle
- * @param third third vertex of triangle
+ * @param a first vertex of triangle
+ * @param b second vertex of triangle
+ * @param c third vertex of triangle
  */
-public record Triangle(Vertex first, Vertex second, Vertex third) {}
+public record Triangle(Vector a, Vector b, Vector c) {}

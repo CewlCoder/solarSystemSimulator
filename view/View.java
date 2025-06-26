@@ -2,40 +2,30 @@ package view;
 
 import javax.swing.JPanel;
 
+import graphics3D.Mesh;
 import graphics3D.Triangle;
-import graphics3D.Vertex;
+import graphics3D.Vector;
+import graphics3D.renderer.RenderTarget;
 
 import java.awt.Graphics;
+import java.util.Arrays;
 
 public class View extends JPanel {
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        
-        Triangle tris = new Triangle(
-            new Vertex(0.5f, 0.5f, 1),
-            new Vertex(-0.5f, 0.5f, 1),
-            new Vertex(-0.5f, -0.5f, 1)
-        );
 
-        drawTriangle(graphics, new Projector(this.getWidth(), this.getHeight()), tris);
-    }
+        Mesh cube = new Mesh(Arrays.asList(
+            new Triangle(new Vector(0.5, 0.5, 1), new Vector(-0.5, 0.5, 1), new Vector(-0.5, -0.5, 1)),
+            new Triangle(new Vector(0.5, 0.5, 1), new Vector(-0.5, -0.5, 1), new Vector(0.5, -0.5, 1))
 
-    private void drawTriangle(Graphics graphics, Projector projector, Triangle triangle) {
-        int[] xPoints = new int[3];
-        int[] yPoints = new int[3];
+            //new Triangle(new Vertex(0.5f, 0.5f, 1), new Vertex(-0.5f, -0.5f, 1), new Vertex(0.5f, -0.5f, 1))
+        ));
 
-        Vertex[] vertices = {
-            projector.project(triangle.first()),
-            projector.project(triangle.second()),
-            projector.project(triangle.third())
-        };
+        RenderTarget target = new RenderTarget(this.getWidth(), this.getHeight());
 
-        for (int index = 0; index < 3; index++) {
-            xPoints[index] = Math.round(vertices[index].x());
-            yPoints[index] = Math.round(vertices[index].y());
-        }
+        target.drawMesh(cube);
 
-        graphics.drawPolygon(xPoints, yPoints, 3);
+        graphics.drawImage(target.image(), 0, 0, null);
     }
 }

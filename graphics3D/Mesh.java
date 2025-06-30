@@ -7,4 +7,4 @@ import java.util.List;
  * 
  * @param triangles a list of triangles
  */
-public record Mesh(List<Triangle> triangles) {}
+public record Mesh(List<Triangle3D> triangles) {}

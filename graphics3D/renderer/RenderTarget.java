@@ -1,12 +1,10 @@
 package graphics3D.renderer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import graphics3D.Mesh;
-import graphics3D.Triangle;
-import graphics3D.Vector;
+import graphics3D.Triangle3D;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -15,90 +13,34 @@ public class RenderTarget {
     private BufferedImage image;
     private List<List<Double>> depthBuffer;
 
+    private Camera camera;
     private Projector projector;
 
-    public RenderTarget(int width, int height) {
+    /**
+     * Creates render target which handles drawing meshes onto a 2d canvas.
+     * 
+     * @param width width of canvas
+     * @param height height of canvas
+     */
+    public RenderTarget(Camera camera, int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         this.depthBuffer = new ArrayList<>();
+
+        this.camera = camera;
         this.projector = new Projector(width, height);
     }
 
 
-    private int getMin(int a, int b, int c) {
-        int min = a;
-
-        if (b < min) {
-            min = b;
-        }
-        if (c < min) {
-            min = c;
-        }
-
-        return min;
-    }
-
-    private int getMax(int a, int b, int c) {
-        int max = a;
-
-        if (b > max) {
-            max = b;
-        }
-        if (c > max) {
-            max = c;
-        }
-
-        return max;
-    }
-
-    private List<List<Integer>> boundingBoxOfProjectedTriangle(Triangle projectedTriangle) {
-        Vector a = projectedTriangle.a();
-        Vector b = projectedTriangle.b();
-        Vector c = projectedTriangle.c();
-
-        List<Integer> xBounds = new ArrayList<>();
-        List<Integer> yBounds = new ArrayList<>();
-
-        xBounds.add(getMin((int) a.x(), (int) b.x(), (int) c.x()));
-        xBounds.add(getMax((int) a.x(), (int) b.x(), (int) c.x()));
-
-        yBounds.add(getMin((int) a.y(), (int) b.y(), (int) c.y()));
-        yBounds.add(getMax((int) a.y(), (int) b.y(), (int) c.y()));
-
-        return Arrays.asList(xBounds, yBounds);
-    }
-
-    private boolean isWithinProjectedTriangle(Triangle projectedTriangle, Vector pixel) {
-        Vector a = projectedTriangle.a();
-        Vector b = projectedTriangle.b();
-        Vector c = projectedTriangle.c();
-
-        Vector ab = b.subtract(a);
-        Vector bc = c.subtract(b);
-        Vector ca = a.subtract(c);
-
-        Vector ap = pixel.subtract(a);
-        Vector bp = pixel.subtract(b);
-        Vector cp = pixel.subtract(c);
-
-        double aAngle = ab.angleBetween(ca.scale(-1));
-        double bAngle = bc.angleBetween(ab.scale(-1));
-        double cAngle = ca.angleBetween(bc.scale(-1));
-
-        double apAngle = ab.angleBetween(ap);
-        double bpAngle = bc.angleBetween(bp);
-        double cpAngle = ca.angleBetween(cp);
-
-        boolean isWithinA = apAngle <= aAngle;
-        boolean isWithinB = bpAngle <= bAngle;
-        boolean isWithinC = cpAngle <= cAngle;
-
-        return isWithinA & isWithinB & isWithinC;
-    }
 
     public void drawMesh(Mesh mesh) {
-        for (Triangle triangle : mesh.triangles()) {
-            Triangle projectedTriangle = projector.projectTriangle(triangle);
-            List<List<Integer>> boundingBox = boundingBoxOfProjectedTriangle(projectedTriangle);
+        for (Triangle3D triangle : mesh.triangles()) {
+            Triangle3D cameraSpaceTriangle = camera.transformTriangle(triangle);
+            if (cameraSpaceTriangle == null) {continue;}
+
+            Triangle2D pixelSpaceTriangle = projector.projectTriangle(cameraSpaceTriangle);
+            if (pixelSpaceTriangle == null) {continue;}
+
+            List<List<Integer>> boundingBox = pixelSpaceTriangle.boundingBox();
 
             int xMin = boundingBox.get(0).get(0);
             int xMax = boundingBox.get(0).get(1);
@@ -108,10 +50,10 @@ public class RenderTarget {
 
             for (int y = yMin; y < yMax; y++) {
                 for (int x = xMin; x < xMax; x++) {
-                    Vector pixel = new Vector(x, y);
+                    Vector2D pixel = new Vector2D(x, y);
 
-                    if (isWithinProjectedTriangle(projectedTriangle, pixel)) {
-                        image.setRGB(x, y, Color.BLUE.getRGB());
+                    if (pixelSpaceTriangle.isWithinTriangle(pixel)) {
+                        image.setRGB(x, y, Color.RED.getRGB());
                     }
                 }
             }

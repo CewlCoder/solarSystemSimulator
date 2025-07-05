@@ -1,4 +1,4 @@
-package graphics3D.renderer;
+package view.renderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,23 +7,41 @@ import java.util.List;
 public class Triangle2D {
     private Vertex2D a;
     private Vertex2D b;
-    private Vertex2D c;    
+    private Vertex2D c;
+
+    private Vector2D ab;
+    private Vector2D bc;
+    private Vector2D ca;
 
     protected Triangle2D(Vertex2D a, Vertex2D b, Vertex2D c) {
+        Vector2D ab = b.subtract(a);
+        Vector2D ac = c.subtract(a);
+
         this.a = a;
-        this.b = b;
-        this.c = c;
+
+        if (ab.isOnCounterClockSide(ac)) {
+            this.b = b;
+            this.c = c;
+        } else {
+            this.b = c;
+            this.c = b;
+        }
+
+        this.ab = ab;
+        this.bc = c.subtract(b);
+        this.ca = a.subtract(c);
     }
 
+    public Vertex2D a() {
+        return a;
+    }
 
-    public List<Vertex2D> vertices() {
-        List<Vertex2D> verticies = new ArrayList<>();
+    public Vertex2D b() {
+        return b;
+    }
 
-        verticies.add(a);
-        verticies.add(b);
-        verticies.add(c);
-
-        return verticies;
+    public Vertex2D c() {
+        return c;
     }
 
 
@@ -68,21 +86,13 @@ public class Triangle2D {
     }
 
     public boolean isWithinTriangle(Vector2D pixel) {
-        Vector2D ab = b.subtract(a);
-        Vector2D bc = c.subtract(b);
-        Vector2D ca = a.subtract(c);
-
         Vector2D ap = pixel.subtract(a);
         Vector2D bp = pixel.subtract(b);
         Vector2D cp = pixel.subtract(c);
 
-        Vector2D abn = new Vector2D(ab.y(), -ab.x());
-        Vector2D bcn = new Vector2D(bc.y(), -bc.x());
-        Vector2D can = new Vector2D(ca.y(), -ca.x());
-
-        boolean isWithinAB = ap.dot(abn) > 0;
-        boolean isWithinBC = bp.dot(bcn) > 0;
-        boolean isWithinCA = cp.dot(can) > 0;
+        boolean isWithinAB = ab.isOnCounterClockSide(ap);
+        boolean isWithinBC = bc.isOnCounterClockSide(bp);
+        boolean isWithinCA = ca.isOnCounterClockSide(cp);
 
         return isWithinAB & isWithinBC & isWithinCA;
     }

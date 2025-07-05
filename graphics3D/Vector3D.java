@@ -55,6 +55,11 @@ public class Vector3D {
         return new Vector3D(x, y, z);
     }
 
+    @Override
+    public String toString() {
+        return String.format("Vector3D(x=%.3f, y=%.3f, z=%.3f)", x, y, z);
+    }
+
 
 
     public double x() {

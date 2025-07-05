@@ -1,5 +1,6 @@
 package graphics3D;
 
+import java.awt.Color;
 import java.util.List;
 
 /**
@@ -7,4 +8,4 @@ import java.util.List;
  * 
  * @param triangles a list of triangles
  */
-public record Mesh(List<Triangle3D> triangles) {}
+public record Mesh(List<Triangle3D> triangles, Color color) {}

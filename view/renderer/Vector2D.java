@@ -1,8 +1,8 @@
-package graphics3D.renderer;
+package view.renderer;
 
 public class Vector2D {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
     protected Vector2D(int x, int y) {
         this.x = x;
@@ -25,6 +25,13 @@ public class Vector2D {
         int y = this.y() - other.y();
 
         return new Vector2D(x, y);
+    }
+
+    public boolean isOnCounterClockSide(Vector2D other) {
+        Vector2D rotated90ClockWise = new Vector2D(-y, x);
+        boolean onCounterClockSide = other.dot(rotated90ClockWise) > 0;
+
+        return onCounterClockSide;
     }
 
 

@@ -1,4 +1,4 @@
-package graphics3D.renderer;
+package view.renderer;
 
 public class Vertex2D extends Vector2D {
     private double depth;

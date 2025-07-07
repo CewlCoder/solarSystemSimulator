@@ -19,7 +19,7 @@ public class Model implements ControllableModel, ViewableModel {
 
     public Model() {
         this.meshes = new ArrayList<>();
-        this.camera = new Camera();
+        this.camera = new Camera(95);
 
         Mesh cube = new Mesh(Arrays.asList(
             new Triangle3D(new Vector3D(0.5, 0.5, -1), new Vector3D(-0.5, 0.5, -1), new Vector3D(-0.5, -0.5, -1)),

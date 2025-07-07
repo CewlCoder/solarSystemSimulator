@@ -11,6 +11,8 @@ public class Projector {
     private int height;
 
     private double screenSpaceWidth;
+    private double screenSpaceHeight;
+
     private double screenSpaceToPixelSpaceRatio;
 
     /**
@@ -18,58 +20,58 @@ public class Projector {
      * 
      * @param width screen width
      * @param height screen height
+     * @param cameraFov fov of camera
      */
-    public Projector(int width, int height) {
+    public Projector(int width, int height, double cameraFov) {
         this.width = width;
         this.height = height;
 
-        this.screenSpaceWidth = 2 * Math.tan(Math.toRadians(90 / 2));
+        this.screenSpaceWidth = 2 * Math.tan(Math.toRadians(cameraFov / 2));
+        this.screenSpaceHeight = 2 * Math.tan(Math.toRadians(cameraFov / 2)) * height / width;
+
         this.screenSpaceToPixelSpaceRatio = width / screenSpaceWidth;
     }
 
 
 
-    private boolean isValidPixelSpaceCoordinates(double xPixelSpace, double yPixelPsace) {
-        if ((xPixelSpace < 0) | (xPixelSpace > width)) {
-            return false;
-        }
-        if ((yPixelPsace < 0) | (yPixelPsace > height)) {
-            return false;
+    public boolean isWithinViewThrustum(Triangle3D triangle) {
+        for (Vector3D vertex : triangle.vertices()) {
+            double xMin = screenSpaceWidth / 2 * vertex.z();
+            double xMax = -xMin;
+
+            double yMin = screenSpaceHeight / 2 * vertex.z();
+            double yMax = -yMin;
+
+            if ((vertex.x() <= xMin) | (xMax <= vertex.x())) return false;
+            if ((vertex.y() <= yMin) | (yMax <= vertex.y())) return false;
         }
 
         return true;
     }
 
     private Vertex2D project(Vector3D vertex) {
-        double xScreenSpace = - vertex.x() / vertex.z();
-        double yScreenSpace = - vertex.y() / vertex.z();
+        double xScreenSpace = -vertex.x() / vertex.z();
+        double yScreenSpace = -vertex.y() / vertex.z();
 
         double xPixelSpace = width / 2 + (xScreenSpace * screenSpaceToPixelSpaceRatio);
         double yPixelSpace = height / 2 - (yScreenSpace * screenSpaceToPixelSpaceRatio);
-
-        if (!isValidPixelSpaceCoordinates(xPixelSpace, yPixelSpace)) return null;
 
         return new Vertex2D((int) Math.round(xPixelSpace), (int) Math.round(yPixelSpace), vertex.z());
     }
 
     public List<Double> inverseProject(int x, int y) {
-        double xScreenSpace = (x - width / 2) / screenSpaceToPixelSpaceRatio;
-        double yScreenSpace = (height / 2 - y) / screenSpaceToPixelSpaceRatio;
+        double xScreenSpace = (width / 2 - x) / screenSpaceToPixelSpaceRatio;
+        double yScreenSpace = (y - height / 2) / screenSpaceToPixelSpaceRatio;
 
         return Arrays.asList(xScreenSpace, yScreenSpace);
     }
 
     public Triangle2D projectTriangle(Triangle3D triangle) {
-        Vertex2D projectedA = project(triangle.a());
-        if (projectedA == null) return null;
-
-        Vertex2D projectedB = project(triangle.b());
-        if (projectedB == null) return null;
-
-        Vertex2D projectedC = project(triangle.c());
-        if (projectedC == null) return null;
-
-        return new Triangle2D(projectedA, projectedB, projectedC);
+        return new Triangle2D(
+            project(triangle.a()), 
+            project(triangle.b()), 
+            project(triangle.c())
+        );
     }
 
 }

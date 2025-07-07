@@ -4,6 +4,8 @@ import controller.Controller;
 import model.Model;
 import view.View;
 
+//Fix draw detection in projector
+
 public class Main {
     
     public static void main(String[] args) {

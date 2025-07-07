@@ -13,18 +13,22 @@ import graphics3D.Triangle3D;
 public class Renderer {
     private BufferedImage image;
     private List<List<Double>> depthBuffer;
+
+    private ReadOnlyCamera camera;
     private Projector projector;
 
     private int width;
     private int height;
 
-    public Renderer(int width, int height) {
+    public Renderer(ReadOnlyCamera camera, int width, int height) {
         this.width = width;
         this.height = height;
 
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         this.depthBuffer = new ArrayList<>();
-        this.projector = new Projector(width, height);
+
+        this.camera = camera;
+        this.projector = new Projector(width, height, camera.fov());
     }
 
 
@@ -52,6 +56,7 @@ public class Renderer {
 
         int yMin = boundingBox.get(1).get(0);
         int yMax = boundingBox.get(1).get(1);
+
         for (int y = yMin; y < yMax; y++) {
             for (int x = xMin; x < xMax; x++) {
                 Vector2D pixel = new Vector2D(x, y);
@@ -79,14 +84,12 @@ public class Renderer {
         }
     }
 
-    public void renderMesh(ReadOnlyCamera camera, Mesh mesh) {
+    public void renderMesh(Mesh mesh) {
         for (Triangle3D triangle : mesh.triangles()) {
             Triangle3D cameraSpaceTriangle = camera.transformFromWorldSpaceToCameraSpace(triangle);
-            if (cameraSpaceTriangle == null) continue;
+            if (!projector.isWithinViewThrustum(cameraSpaceTriangle)) continue;
 
             Triangle2D pixelSpaceTriangle = projector.projectTriangle(cameraSpaceTriangle);
-            if (pixelSpaceTriangle == null) continue;
-
             drawToImage(pixelSpaceTriangle, mesh.color());
         }
     }

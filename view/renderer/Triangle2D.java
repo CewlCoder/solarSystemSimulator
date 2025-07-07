@@ -14,34 +14,22 @@ public class Triangle2D {
     private Vector2D ca;
 
     protected Triangle2D(Vertex2D a, Vertex2D b, Vertex2D c) {
-        Vector2D ab = b.subtract(a);
-        Vector2D ac = c.subtract(a);
+        Vector2D abTest = b.subtract(a);
+        Vector2D acTest = c.subtract(a);
 
         this.a = a;
 
-        if (ab.isOnCounterClockSide(ac)) {
+        if (abTest.isOnCounterClockSide(acTest)) {
             this.b = b;
             this.c = c;
         } else {
             this.b = c;
             this.c = b;
-        }
+        }        
 
-        this.ab = ab;
-        this.bc = c.subtract(b);
-        this.ca = a.subtract(c);
-    }
-
-    public Vertex2D a() {
-        return a;
-    }
-
-    public Vertex2D b() {
-        return b;
-    }
-
-    public Vertex2D c() {
-        return c;
+        this.ab = this.b.subtract(this.a);
+        this.bc = this.c.subtract(this.b);
+        this.ca = this.a.subtract(this.c);
     }
 
 

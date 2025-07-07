@@ -35,7 +35,7 @@ public class View extends JPanel {
         int height = this.getHeight();
 
         if ((width != oldWidth) | (height != oldHeight)) {
-            this.renderer = new Renderer(width, height);
+            this.renderer = new Renderer(model.camera(), width, height);
 
             this.oldWidth = width;
             this.oldHeight = height;
@@ -44,7 +44,7 @@ public class View extends JPanel {
         renderer.clearImage();
 
         for (Mesh mesh : model.meshes()) {
-            renderer.renderMesh(model.camera(), mesh);
+            renderer.renderMesh(mesh);
         }
 
         renderer.displayImage(graphics);

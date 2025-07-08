@@ -31,23 +31,23 @@ public class Controller implements KeyListener, MouseMotionListener {
     @Override
     public void keyPressed(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_Q) {
-            model.shiftCamera(new Vector3D(0, -0.1, 0));
+            model.shiftCamera(new Vector3D(0, -0.05, 0));
         }
         if (event.getKeyCode() == KeyEvent.VK_E) {
-            model.shiftCamera(new Vector3D(0, 0.1, 0));
+            model.shiftCamera(new Vector3D(0, 0.05, 0));
         }
 
         if (event.getKeyCode() == KeyEvent.VK_W) {
-            model.shiftCamera(new Vector3D(0, 0, -0.1));
+            model.shiftCamera(new Vector3D(0, 0, -0.05));
         }
         if (event.getKeyCode() == KeyEvent.VK_A) {
-            model.shiftCamera(new Vector3D(-0.1, 0, 0));
+            model.shiftCamera(new Vector3D(-0.05, 0, 0));
         }
         if (event.getKeyCode() == KeyEvent.VK_S) {
-            model.shiftCamera(new Vector3D(0, 0, 0.1));
+            model.shiftCamera(new Vector3D(0, 0, 0.05));
         }
         if (event.getKeyCode() == KeyEvent.VK_D) {
-            model.shiftCamera(new Vector3D(0.1, 0, 0));
+            model.shiftCamera(new Vector3D(0.05, 0, 0));
         }
 
         view.repaint();

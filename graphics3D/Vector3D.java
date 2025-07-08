@@ -18,6 +18,19 @@ public class Vector3D {
         this.z = z;
     }
 
+    public double x() {
+        return x;
+    }
+
+    public double y() {
+        return y;
+    }
+
+    public double z() {
+        return z;
+    }
+
+
 
     public Vector3D rotate(char axis, double angle) {
         switch (axis) {
@@ -54,24 +67,4 @@ public class Vector3D {
 
         return new Vector3D(x, y, z);
     }
-
-    @Override
-    public String toString() {
-        return String.format("Vector3D(x=%.3f, y=%.3f, z=%.3f)", x, y, z);
-    }
-
-
-
-    public double x() {
-        return x;
-    }
-
-    public double y() {
-        return y;
-    }
-
-    public double z() {
-        return z;
-    }
-
 }

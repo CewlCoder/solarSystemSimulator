@@ -42,7 +42,7 @@ public class Camera implements ReadOnlyCamera {
     }
 
     public void shift(Vector3D offset) {
-        Vector3D rotatedX = offset.rotate('x', yaw);
+        Vector3D rotatedX = offset.rotate('x', -yaw);
         Vector3D rotatedXY = rotatedX.rotate('y', pitch);
 
         position = position.add(rotatedXY);

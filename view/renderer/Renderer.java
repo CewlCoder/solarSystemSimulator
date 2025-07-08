@@ -48,39 +48,23 @@ public class Renderer {
         return depthX;
     }
 
+    private void drawColumn(int column, int xMinTriangleBound, int xMaxTriangleBound, Color color) {
+        for (int x = xMinTriangleBound; x < xMaxTriangleBound; x++) {
+            image.setRGB(x, column, color.getRGB());
+        }
+    }
+
     private void drawToImage(Triangle2D pixelSpaceTriangle, Color color) {
-        List<List<Integer>> boundingBox = pixelSpaceTriangle.boundingBox();
+        int yMinBound = pixelSpaceTriangle.a().y();
+        int yMaxBound = pixelSpaceTriangle.c().y();
 
-        int xMin = boundingBox.get(0).get(0);
-        int xMax = boundingBox.get(0).get(1);
+        for (int y = yMaxBound; y > yMinBound; y--) {
+            List<Integer> triangleBounds = pixelSpaceTriangle.xTriangleBounds(y);
 
-        int yMin = boundingBox.get(1).get(0);
-        int yMax = boundingBox.get(1).get(1);
+            int xMinTriangleBound = triangleBounds.get(0);
+            int xMaxTriangleBound = triangleBounds.get(1);
 
-        for (int y = yMin; y < yMax; y++) {
-            for (int x = xMin; x < xMax; x++) {
-                Vector2D pixel = new Vector2D(x, y);
-
-                if (pixelSpaceTriangle.isWithinTriangle(pixel)) { //todo fix depthBufferValue logic in terms of when bufferDepth is null
-                    /*
-                    Double bufferDepth = depthBufferValue(x, y);
-                    double pixelDepth;
-
-                    if (bufferDepth == null) {
-                        List<Double> yDepthBuffer = new ArrayList<>();
-
-                        yDepthBuffer.set(x, pixelDepth);
-                        depthBuffer.set(y, yDepthBuffer);
-
-                        image.setRGB(x, y, color.getRGB());
-                    } else if (bufferDepth < pixelDepth) {
-                        depthBuffer.get(y).set(x, pixelDepth);
-                    }
-                    */
-
-                    image.setRGB(x, y, color.getRGB());
-                }
-            }
+            drawColumn(y, xMinTriangleBound, xMaxTriangleBound, color);
         }
     }
 

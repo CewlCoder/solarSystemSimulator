@@ -10,78 +10,68 @@ public class Triangle2D {
     private Vertex2D c;
 
     private Vector2D ab;
+    private Vector2D ac;
     private Vector2D bc;
-    private Vector2D ca;
 
     protected Triangle2D(Vertex2D a, Vertex2D b, Vertex2D c) {
-        Vector2D abTest = b.subtract(a);
-        Vector2D acTest = c.subtract(a);
+        List<Vertex2D> ySorted = sortVerticiesBasedOnY(a, b, c);
 
-        this.a = a;
-
-        if (abTest.isOnCounterClockSide(acTest)) {
-            this.b = b;
-            this.c = c;
-        } else {
-            this.b = c;
-            this.c = b;
-        }        
+        this.a = ySorted.get(0);
+        this.b = ySorted.get(1);
+        this.c = ySorted.get(2);
 
         this.ab = this.b.subtract(this.a);
+        this.ac = this.c.subtract(this.a);
         this.bc = this.c.subtract(this.b);
-        this.ca = this.a.subtract(this.c);
+    }
+
+    private List<Vertex2D> sortVerticiesBasedOnY(Vertex2D a, Vertex2D b, Vertex2D c) {
+        List<Vertex2D> vertecies = Arrays.asList(a, b, c);
+        vertecies.sort((vertex1, vertex2) -> Integer.compare(vertex1.y(), vertex2.y()));
+
+        return vertecies;
+    }
+
+    public Vertex2D a() {
+        return a;
+    }
+
+    public Vertex2D c() {
+        return c;
     }
 
 
 
-    private int getMin(int a, int b, int c) {
-        int min = a;
+    private int xBasedOnYWithinEdge(int y, Vector2D edgeStart, Vector2D edgeVector) {
+        double scalingFactor = (double) edgeVector.x() / (double) edgeVector.y();
 
-        if (b < min) {
-            min = b;
-        }
-        if (c < min) {
-            min = c;
-        }
-
-        return min;
+        return (int) Math.round(edgeStart.x() + (y - edgeStart.y()) * scalingFactor);
     }
 
-    private int getMax(int a, int b, int c) {
-        int max = a;
+    private boolean isCollidingWithEdge(int y, Vector2D edgeStart, Vector2D edgeVector) {
+        int yMin = edgeStart.y();
+        int yMax = edgeStart.y() + edgeVector.y();
 
-        if (b > max) {
-            max = b;
-        }
-        if (c > max) {
-            max = c;
-        }
-
-        return max;
+        return ((yMin <= y) & (y <= yMax));
     }
 
-    public List<List<Integer>> boundingBox() {
-        List<Integer> xBounds = new ArrayList<>();
-        List<Integer> yBounds = new ArrayList<>();
+    public List<Integer> xTriangleBounds(int y) {
+        List<Integer> bounds = new ArrayList<>();
 
-        xBounds.add(getMin(a.x(), b.x(), c.x()));
-        xBounds.add(getMax(a.x(), b.x(), c.x()));
+        if (isCollidingWithEdge(y, a, ab)) bounds.add(xBasedOnYWithinEdge(y, a, ab));
+        if (isCollidingWithEdge(y, a, ac)) bounds.add(xBasedOnYWithinEdge(y, a, ac));
+        if (isCollidingWithEdge(y, b, bc)) bounds.add(xBasedOnYWithinEdge(y, b, bc));
 
-        yBounds.add(getMin(a.y(), b.y(), c.y()));
-        yBounds.add(getMax(a.y(), b.y(), c.y()));
+        int xMinTriangleBound = bounds.get(0);
+        int xMaxTriangleBound = bounds.get(1);
 
-        return Arrays.asList(xBounds, yBounds);
-    }
+        if (xMaxTriangleBound < xMinTriangleBound) {
+            int oldMax = xMinTriangleBound;
 
-    public boolean isWithinTriangle(Vector2D pixel) {
-        Vector2D ap = pixel.subtract(a);
-        Vector2D bp = pixel.subtract(b);
-        Vector2D cp = pixel.subtract(c);
+            xMinTriangleBound = xMaxTriangleBound;
+            xMaxTriangleBound = oldMax;
+        }
 
-        boolean isWithinAB = ab.isOnCounterClockSide(ap);
-        boolean isWithinBC = bc.isOnCounterClockSide(bp);
-        boolean isWithinCA = ca.isOnCounterClockSide(cp);
-
-        return isWithinAB & isWithinBC & isWithinCA;
+        return Arrays.asList(xMinTriangleBound, xMaxTriangleBound);
     }
 }

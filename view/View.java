@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import graphics3D.Mesh;
 import view.renderer.Renderer;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 public class View extends JPanel {
@@ -17,6 +18,8 @@ public class View extends JPanel {
 
     public View(ViewableModel model) {
         this.model = model;
+
+        this.setPreferredSize(new Dimension(500, 500));
     }
 
 

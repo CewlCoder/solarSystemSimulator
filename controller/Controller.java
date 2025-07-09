@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import graphics3D.Vector3D;
@@ -19,7 +22,8 @@ public class Controller implements KeyListener, MouseMotionListener {
     private ControllableModel model;
     private View view;
     private Timer timer;
-
+    
+    private Robot robot;
     private Set<Integer> pressedKeys;
     private HashMap<Integer, Vector3D> movementMap;
 
@@ -27,6 +31,12 @@ public class Controller implements KeyListener, MouseMotionListener {
         this.model = model;
         this.view = view;
         this.timer = new Timer(model.tickDelay(), this::gameTick);
+        
+        try {
+            this.robot = new Robot();
+        } catch (Throwable error) {
+            System.err.println("Cannot create robot.");
+        }
 
         this.pressedKeys = new HashSet<>();
         this.movementMap = new HashMap<>();
@@ -79,6 +89,13 @@ public class Controller implements KeyListener, MouseMotionListener {
 
 
 
+    private void centerMouse() {
+        Point center = new Point(view.getWidth() / 2, view.getHeight() / 2);
+        SwingUtilities.convertPointToScreen(center, view);
+
+        robot.mouseMove(center.x, center.y);
+    }
+
     @Override
     public void mouseMoved(MouseEvent event) {
         List<Double> screenPositions = view.renderer().projector().inverseProject(event.getX(), event.getY());
@@ -90,6 +107,7 @@ public class Controller implements KeyListener, MouseMotionListener {
         double rotationY = Math.toDegrees(Math.atan(yScreenSpace));
 
         model.rotateCamera(rotationX, rotationY);
+        centerMouse();
     }
 
     @Override

@@ -37,12 +37,12 @@ public class Camera implements ReadOnlyCamera {
 
 
     public void rotate(double pitch, double yaw) {
-        this.pitch = Math.toRadians(pitch);
-        this.yaw = Math.toRadians(yaw);
+        this.pitch += Math.toRadians(pitch);
+        this.yaw += Math.toRadians(-yaw);
     }
 
     public void shift(Vector3D offset) {
-        Vector3D rotatedX = offset.rotate('x', -yaw);
+        Vector3D rotatedX = offset.rotate('x', yaw);
         Vector3D rotatedXY = rotatedX.rotate('y', pitch);
 
         position = position.add(rotatedXY);
@@ -55,7 +55,7 @@ public class Camera implements ReadOnlyCamera {
         for (Vector3D vertex : triangle.vertices()) {
             Vector3D translated = vertex.subtract(position);
             Vector3D rotatedY = translated.rotate('y', -pitch);
-            Vector3D rotatedYX = rotatedY.rotate('x', yaw);
+            Vector3D rotatedYX = rotatedY.rotate('x', -yaw);
 
             translatedVertecies.add(rotatedYX);
         }

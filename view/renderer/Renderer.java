@@ -11,14 +11,14 @@ import graphics3D.ReadOnlyCamera;
 import graphics3D.Triangle3D;
 
 public class Renderer {
+    private int width;
+    private int height;
+
     private BufferedImage image;
     private List<List<Double>> depthBuffer;
 
     private ReadOnlyCamera camera;
     private Projector projector;
-
-    private int width;
-    private int height;
 
     public Renderer(ReadOnlyCamera camera, int width, int height) {
         this.width = width;
@@ -38,15 +38,6 @@ public class Renderer {
     }
 
 
-
-    private Double depthBufferValue(int x, int y) {
-        List<Double> depthY = depthBuffer.get(y);
-        if (depthY == null) return null;
-        Double depthX = depthY.get(x);
-        if (depthX == null) return null;
-
-        return depthX;
-    }
 
     private void drawColumn(int column, int xMinTriangleBound, int xMaxTriangleBound, Color color) {
         for (int x = xMinTriangleBound; x < xMaxTriangleBound; x++) {

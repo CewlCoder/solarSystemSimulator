@@ -17,4 +17,9 @@ public interface ControllableModel {
      * @param yaw yaw (in deg)
      */
     void rotateCamera(double pitch, double yaw);
+
+    /** 
+     * Gets the tick delay for the game.
+     */
+    int tickDelay();
 }

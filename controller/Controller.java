@@ -4,7 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Timer;
@@ -15,49 +18,64 @@ import view.View;
 public class Controller implements KeyListener, MouseMotionListener {
     private ControllableModel model;
     private View view;
+    private Timer timer;
 
-    
+    private Set<Integer> pressedKeys;
+    private HashMap<Integer, Vector3D> movementMap;
+
     public Controller(ControllableModel model, View view) {
         this.model = model;
         this.view = view;
+        this.timer = new Timer(model.tickDelay(), this::gameTick);
 
+        this.pressedKeys = new HashSet<>();
+        this.movementMap = new HashMap<>();
+
+        movementMap.put(KeyEvent.VK_Q, new Vector3D(0, -0.05, 0));
+        movementMap.put(KeyEvent.VK_E, new Vector3D(0, 0.05, 0));
+
+        movementMap.put(KeyEvent.VK_W, new Vector3D(0, 0, -0.05));
+        movementMap.put(KeyEvent.VK_A, new Vector3D(-0.05, 0, 0));
+        movementMap.put(KeyEvent.VK_S, new Vector3D(0, 0, 0.05));
+        movementMap.put(KeyEvent.VK_D, new Vector3D(0.05, 0, 0));
+
+        timer.start();
         view.addKeyListener(this);
         view.addMouseMotionListener(this);
         view.setFocusable(true);
     }
 
+    private void gameTick(ActionEvent event) {
+        updateMovement();
+        view.repaint();
+    }
 
+
+
+    private void updateMovement() {
+        Vector3D movement = new Vector3D(0, 0, 0);
+
+        for (int key : movementMap.keySet()) {
+            if (pressedKeys.contains(key)) {
+                movement = movement.add(movementMap.get(key));
+            }
+        }
+
+        model.shiftCamera(movement);
+    }
 
     @Override
     public void keyPressed(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.VK_Q) {
-            model.shiftCamera(new Vector3D(0, -0.05, 0));
-        }
-        if (event.getKeyCode() == KeyEvent.VK_E) {
-            model.shiftCamera(new Vector3D(0, 0.05, 0));
-        }
+        pressedKeys.add(event.getKeyCode());
+    }
 
-        if (event.getKeyCode() == KeyEvent.VK_W) {
-            model.shiftCamera(new Vector3D(0, 0, -0.05));
-        }
-        if (event.getKeyCode() == KeyEvent.VK_A) {
-            model.shiftCamera(new Vector3D(-0.05, 0, 0));
-        }
-        if (event.getKeyCode() == KeyEvent.VK_S) {
-            model.shiftCamera(new Vector3D(0, 0, 0.05));
-        }
-        if (event.getKeyCode() == KeyEvent.VK_D) {
-            model.shiftCamera(new Vector3D(0.05, 0, 0));
-        }
-
-        view.repaint();
+    @Override
+    public void keyReleased(KeyEvent event) {
+        pressedKeys.remove(event.getKeyCode());
     }
 
     @Override
     public void keyTyped(KeyEvent event) {}
-
-    @Override
-    public void keyReleased(KeyEvent event) {}
 
 
 
@@ -72,8 +90,6 @@ public class Controller implements KeyListener, MouseMotionListener {
         double rotationY = Math.toDegrees(Math.atan(yScreenSpace));
 
         model.rotateCamera(rotationX, rotationY);
-
-        view.repaint();
     }
 
     @Override

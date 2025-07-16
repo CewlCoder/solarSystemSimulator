@@ -1,8 +1,5 @@
 package graphics3D;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Camera implements ReadOnlyCamera {
     private Vector3D position;
 
@@ -14,6 +11,11 @@ public class Camera implements ReadOnlyCamera {
     private double pitch;
     private double yaw;
 
+    /**
+     * Creates a camera that's looking towards -Z.
+     * 
+     * @param fov the fov of the camera
+     */
     public Camera(double fov) {
         this.position = new Vector3D(0, 0, 0);
 
@@ -33,21 +35,31 @@ public class Camera implements ReadOnlyCamera {
 
     @Override
     public double pitch() {
-        return Math.toDegrees(pitch);
+        return pitch;
     }
 
     @Override
     public double yaw() {
-        return Math.toDegrees(yaw);
+        return yaw;
     }
 
 
-
+    /**
+     * Adds to the camera's pitch and yaw.
+     * 
+     * @param pitch change in pitch (radians)
+     * @param yaw change in yaw (radians)
+     */
     public void rotate(double pitch, double yaw) {
-        this.pitch += pitch;
-        this.yaw += yaw;
+        this.pitch -= pitch;
+        this.yaw -= yaw;
     }
 
+    /**
+     * Shifts the cameras position by offset, along the camera's basis vectors.
+     * 
+     * @param offset 3D vector to shift the cameras position by
+     */
     public void shift(Vector3D offset) {
         Vector3D localXAxis = originalXAxis.rotate('x', yaw).rotate('y', pitch);
         Vector3D localYAxis = originalYAxis.rotate('x', yaw).rotate('y', pitch);

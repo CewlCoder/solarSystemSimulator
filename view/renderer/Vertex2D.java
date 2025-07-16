@@ -9,7 +9,11 @@ public class Vertex2D extends Vector2D {
     }
 
 
-
+    /**
+     * Gets the depth of this vector.
+     * 
+     * @return the depth of this vector
+     */
     public double depth() {
         return depth;
     }

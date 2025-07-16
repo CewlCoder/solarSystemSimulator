@@ -32,46 +32,53 @@ public class Triangle2D {
         return vertecies;
     }
 
-    public Vertex2D a() {
-        return a;
+    /**
+     * Calculates the vertical bounding box of this triangle.
+     * 
+     * @return the vertical bounding box (min, max)
+     */
+    public List<Integer> verticalBoundingBox() {
+        return Arrays.asList(a.y(), c.y());
     }
 
-    public Vertex2D c() {
-        return c;
-    }
 
 
-
-    private int xBasedOnYWithinEdge(int y, Vector2D edgeStart, Vector2D edgeVector) {
+    private int xAtYIntersection(int y, Vector2D edgeStart, Vector2D edgeVector) {
         double scalingFactor = (double) edgeVector.x() / (double) edgeVector.y();
 
         return (int) Math.round(edgeStart.x() + (y - edgeStart.y()) * scalingFactor);
     }
 
-    private boolean isCollidingWithEdge(int y, Vector2D edgeStart, Vector2D edgeVector) {
+    private boolean isIntersectingWithEdge(int y, Vector2D edgeStart, Vector2D edgeVector) {
         int yMin = edgeStart.y();
         int yMax = edgeStart.y() + edgeVector.y();
 
         return ((yMin <= y) & (y <= yMax));
     }
 
-    public List<Integer> xTriangleBounds(int y) {
-        List<Integer> bounds = new ArrayList<>();
+    /**
+     * Calculates the x value of the two intersections by a line at y thru this triangle.
+     * 
+     * @param y the function value of the line
+     * @return the two intersection points (min, max)
+     */
+    public List<Integer> lineIntersections(int y) {
+        List<Integer> intersections = new ArrayList<>();
 
-        if (isCollidingWithEdge(y, a, ab)) bounds.add(xBasedOnYWithinEdge(y, a, ab));
-        if (isCollidingWithEdge(y, a, ac)) bounds.add(xBasedOnYWithinEdge(y, a, ac));
-        if (isCollidingWithEdge(y, b, bc)) bounds.add(xBasedOnYWithinEdge(y, b, bc));
+        if (isIntersectingWithEdge(y, a, ab)) intersections.add(xAtYIntersection(y, a, ab));
+        if (isIntersectingWithEdge(y, a, ac)) intersections.add(xAtYIntersection(y, a, ac));
+        if (isIntersectingWithEdge(y, b, bc)) intersections.add(xAtYIntersection(y, b, bc));
 
-        int xMinTriangleBound = bounds.get(0);
-        int xMaxTriangleBound = bounds.get(1);
+        int xMinIntersection = intersections.get(0);
+        int xMaxIntersection = intersections.get(1);
 
-        if (xMaxTriangleBound < xMinTriangleBound) {
-            int oldMax = xMinTriangleBound;
+        if (xMaxIntersection < xMinIntersection) {
+            int oldMax = xMinIntersection;
 
-            xMinTriangleBound = xMaxTriangleBound;
-            xMaxTriangleBound = oldMax;
+            xMinIntersection = xMaxIntersection;
+            xMaxIntersection = oldMax;
         }
 
-        return Arrays.asList(xMinTriangleBound, xMaxTriangleBound);
+        return Arrays.asList(xMinIntersection, xMaxIntersection);
     }
 }

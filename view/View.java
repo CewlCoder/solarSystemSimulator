@@ -12,7 +12,7 @@ public class View extends JPanel {
     private ViewableModel model;
 
     private Renderer renderer;
-    
+
     private int oldWidth = -1;
     private int oldHeight = -1;
 
@@ -20,12 +20,6 @@ public class View extends JPanel {
         this.model = model;
 
         this.setPreferredSize(new Dimension(500, 500));
-    }
-
-
-
-    public Renderer renderer() {
-        return renderer;
     }
 
 

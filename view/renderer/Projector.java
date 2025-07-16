@@ -30,7 +30,12 @@ public class Projector {
     }
 
 
-
+    /**
+     * Checks if a given 3D triangle is within the view thrustum.
+     * 
+     * @param triangle the triangle to check
+     * @return if the triangle is within the view thrustum
+     */
     public boolean isWithinViewThrustum(Triangle3D triangle) {
         for (Vector3D vertex : triangle.vertices()) {
             double xMin = screenSpaceWidth / 2 * vertex.z();
@@ -56,6 +61,12 @@ public class Projector {
         return new Vertex2D((int) Math.round(xPixelSpace), (int) Math.round(yPixelSpace), vertex.z());
     }
 
+    /**
+     * Creates a triangle2D object which is transformed from 3D space to pixel space.
+     * 
+     * @param triangle the 3D triangle to transform
+     * @return the transformed 2D triangle
+     */
     public Triangle2D toPixelSpace(Triangle3D triangle) {
         return new Triangle2D(
             project(triangle.a()), 

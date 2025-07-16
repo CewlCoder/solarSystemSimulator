@@ -14,7 +14,7 @@ public class Renderer {
     private int width;
     private int height;
 
-    private BufferedImage image;
+    private BufferedImage pixelBuffer;
     private List<List<Double>> depthBuffer;
 
     private ReadOnlyCamera camera;
@@ -24,7 +24,7 @@ public class Renderer {
         this.width = width;
         this.height = height;
 
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.pixelBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         this.depthBuffer = new ArrayList<>();
 
         this.camera = camera;
@@ -35,45 +35,59 @@ public class Renderer {
 
     private void drawColumn(int column, int xMinTriangleBound, int xMaxTriangleBound, Color color) {
         for (int x = xMinTriangleBound; x < xMaxTriangleBound; x++) {
-            image.setRGB(x, column, color.getRGB());
+            pixelBuffer.setRGB(x, column, color.getRGB());
         }
     }
 
-    private void drawToImage(Triangle2D pixelSpaceTriangle, Color color) {
-        int yMinBound = pixelSpaceTriangle.a().y();
-        int yMaxBound = pixelSpaceTriangle.c().y();
+    private void drawToPixelBuffer(Triangle2D pixelSpaceTriangle, Color color) {
+        List<Integer> verticalTriangleBoundingBox = pixelSpaceTriangle.verticalBoundingBox();
+
+        int yMinBound = verticalTriangleBoundingBox.get(0);
+        int yMaxBound = verticalTriangleBoundingBox.get(1);
 
         for (int y = yMaxBound; y > yMinBound; y--) {
-            List<Integer> triangleBounds = pixelSpaceTriangle.xTriangleBounds(y);
+            List<Integer> Intersections = pixelSpaceTriangle.lineIntersections(y);
 
-            int xMinTriangleBound = triangleBounds.get(0);
-            int xMaxTriangleBound = triangleBounds.get(1);
+            int xMinIntersection = Intersections.get(0);
+            int xMaxIntersection = Intersections.get(1);
 
-            drawColumn(y, xMinTriangleBound, xMaxTriangleBound, color);
+            drawColumn(y, xMinIntersection, xMaxIntersection, color);
         }
     }
 
+    /**
+     * Renders the given mesh to the image.
+     * 
+     * @param mesh the mesh to render
+     */
     public void renderMesh(Mesh mesh) {
         for (Triangle3D triangle : mesh.triangles()) {
             Triangle3D cameraSpaceTriangle = camera.toCameraSpace(triangle);
             if (!projector.isWithinViewThrustum(cameraSpaceTriangle)) continue;
 
             Triangle2D pixelSpaceTriangle = projector.toPixelSpace(cameraSpaceTriangle);
-            drawToImage(pixelSpaceTriangle, mesh.color());
+            drawToPixelBuffer(pixelSpaceTriangle, mesh.color());
         }
     }
 
 
-
+    /**
+     * Clears the image.
+     */
     public void clearImage() {
-        Graphics graphics = image.getGraphics();
+        Graphics graphics = pixelBuffer.getGraphics();
 
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, width, height);
         graphics.dispose();
     }
 
+    /**
+     * Displays the image onto the given graphics object.
+     * 
+     * @param graphics the graphic to display the image onto
+     */
     public void displayImage(Graphics graphics) {
-        graphics.drawImage(image, 0, 0, null);
+        graphics.drawImage(pixelBuffer, 0, 0, null);
     }
 }

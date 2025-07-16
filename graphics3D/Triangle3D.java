@@ -22,18 +22,38 @@ public class Triangle3D {
     }
 
 
+    /**
+     * A list of this triangle's vertices.
+     * 
+     * @return this triangle's vertices
+     */
     public List<Vector3D> vertices() {
         return Arrays.asList(a, b, c);
     }
 
+    /**
+     * Gets the first vertex of this triangle.
+     * 
+     * @return the first vertex
+     */
     public Vector3D a() {
         return a;
     }
 
+    /**
+     * Gets the second vertex of this triangle.
+     * 
+     * @return the second vertex
+     */
     public Vector3D b() {
         return b;
     }
 
+     /**
+     * Gets the third vertex of this triangle.
+     * 
+     * @return the third vertex
+     */
     public Vector3D c() {
         return c;
     }

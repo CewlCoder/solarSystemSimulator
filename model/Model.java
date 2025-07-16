@@ -60,9 +60,9 @@ public class Model implements ControllableModel, ViewableModel {
 
     @Override
     public void rotateCamera(double pitch, double yaw) {
-        double newYaw = camera.yaw() + yaw;
+        double newYaw = camera.yaw() - yaw;
 
-        if ((newYaw <= -90) | (90 <= newYaw)) {
+        if ((newYaw <= Math.toRadians(-90)) | (Math.toRadians(90) <= newYaw)) {
             yaw = 0;
         }
 
@@ -78,7 +78,7 @@ public class Model implements ControllableModel, ViewableModel {
 
     @Override
     public double sensitivity() {
-        return 2;
+        return 0.001;
     }
 
 

@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -11,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.awt.event.MouseEvent;
 
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import graphics3D.Vector3D;
@@ -88,20 +86,16 @@ public class Controller implements KeyListener, MouseMotionListener {
 
 
 
-    private void centerMouse() {
-        Point center = new Point(view.getWidth() / 2, view.getHeight() / 2);
-        SwingUtilities.convertPointToScreen(center, view);
-
-        robot.mouseMove(center.x, center.y);
-    }
-
     @Override
     public void mouseMoved(MouseEvent event) {
-        double xDelta = (view.getWidth() / 2.0 - event.getX()) / view.getWidth();
-        double yDelta = (view.getHeight() / 2.0 - event.getY()) / view.getWidth();
+        int xCenter = view.getWidth() / 2;
+        int yCenter = view.getHeight() / 2;
+
+        int xDelta = (event.getXOnScreen() - xCenter);
+        int yDelta = (event.getYOnScreen() - yCenter);
 
         model.rotateCamera(xDelta * model.sensitivity(), yDelta * model.sensitivity());
-        centerMouse();
+        robot.mouseMove(xCenter, yCenter);
     }
 
     @Override

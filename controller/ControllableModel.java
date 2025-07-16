@@ -20,12 +20,15 @@ public interface ControllableModel {
 
     /** 
      * Gets the tick delay for the game.
+     * 
+     * @return tick delay in ms
      */
     int tickDelay();
 
     /**
      * Gets the mouse sensitivity.
+     * 
+     * @return mouse sensitivity factor
      */
-
     double sensitivity();
 }

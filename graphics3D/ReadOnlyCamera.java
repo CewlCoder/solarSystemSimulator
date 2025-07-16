@@ -2,21 +2,21 @@ package graphics3D;
 
 public interface ReadOnlyCamera {
     /**
-     * Returns the fov of the camera.
+     * Gets the fov of the camera.
      * 
      * @return fov of camera
      */
     double fov();
 
     /**
-     * Returns the pitch of the camera.
+     * Gets the pitch of the camera.
      * 
      * @return pitch of camera
      */
     double pitch();
 
     /**
-     * Returns the yaw of the camera.
+     * Gets the yaw of the camera.
      * 
      * @return yaw of camera
      */

@@ -33,12 +33,6 @@ public class Renderer {
 
 
 
-    public Projector projector() {
-        return projector;
-    }
-
-
-
     private void drawColumn(int column, int xMinTriangleBound, int xMaxTriangleBound, Color color) {
         for (int x = xMinTriangleBound; x < xMaxTriangleBound; x++) {
             image.setRGB(x, column, color.getRGB());
@@ -61,10 +55,10 @@ public class Renderer {
 
     public void renderMesh(Mesh mesh) {
         for (Triangle3D triangle : mesh.triangles()) {
-            Triangle3D cameraSpaceTriangle = camera.transformFromWorldSpaceToCameraSpace(triangle);
+            Triangle3D cameraSpaceTriangle = camera.toCameraSpace(triangle);
             if (!projector.isWithinViewThrustum(cameraSpaceTriangle)) continue;
 
-            Triangle2D pixelSpaceTriangle = projector.projectTriangle(cameraSpaceTriangle);
+            Triangle2D pixelSpaceTriangle = projector.toPixelSpace(cameraSpaceTriangle);
             drawToImage(pixelSpaceTriangle, mesh.color());
         }
     }

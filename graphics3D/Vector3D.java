@@ -30,7 +30,18 @@ public class Vector3D {
         return z;
     }
 
+    @Override
+    public String toString() {
+        return "x: " + x + " y: " + y + " z: " + z;
+    }
 
+    public Vector3D toBasis(Vector3D localX, Vector3D localY, Vector3D localZ) {
+        Vector3D x = localX.scale(this.x());
+        Vector3D y = localY.scale(this.y());
+        Vector3D z = localZ.scale(this.z());
+
+        return x.add(y).add(z);
+    }
 
     public Vector3D rotate(char axis, double angle) {
         switch (axis) {
@@ -46,10 +57,46 @@ public class Vector3D {
 
                 return new Vector3D(xPrime, y, zPrime);
             }
+            case 'z': {
+                double xPrime = x * Math.cos(angle) - y * Math.sin(angle);
+                double yPrime = x * Math.sin(angle) + y * Math.cos(angle);
+
+                return new Vector3D(xPrime, yPrime, z);
+            }
 
             default:
-                throw new IllegalArgumentException("Axis is not x or y");
+                throw new IllegalArgumentException("Axis is not x, y or z");
         }
+    }
+
+
+
+    public double dot(Vector3D other) {
+        double sum = 0;
+
+        sum += this.x() * other.x();
+        sum += this.y() * other.y();
+        sum += this.z() * other.z();
+
+        return sum;
+    }
+
+    public double length() {
+        double sum = 0;
+
+        sum += this.x() * this.x();
+        sum += this.y() * this.y();
+        sum += this.z() * this.z();
+
+        return Math.sqrt(sum);
+    }
+
+    public Vector3D scale(double factor) {
+        double x = this.x() * factor;
+        double y = this.y() * factor;
+        double z = this.z() * factor;
+
+        return new Vector3D(x, y, z);
     }
 
     public Vector3D subtract(Vector3D other) {

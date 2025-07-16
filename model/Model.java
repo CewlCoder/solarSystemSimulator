@@ -21,68 +21,64 @@ public class Model implements ControllableModel, ViewableModel {
         this.meshes = new ArrayList<>();
         this.camera = new Camera(110);
 
-        Mesh cube = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(0.5, 0.5, -1), new Vector3D(-0.5, 0.5, -1), new Vector3D(-0.5, -0.5, -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -1), new Vector3D(-0.5, -0.5, -1), new Vector3D(0.5, -0.5, -1)),
-
-            new Triangle3D(new Vector3D(-0.5, 0.5, -1), new Vector3D(-0.5, 0.5, -2), new Vector3D(-0.5, -0.5, -1)),
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2), new Vector3D(-0.5, -0.5, -2), new Vector3D(-0.5, -0.5, -1)),
-
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2), new Vector3D(0.5, 0.5, -2), new Vector3D(0.5, -0.5, -2)),
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2), new Vector3D(0.5, -0.5, -2), new Vector3D(-0.5, -0.5, -2)),
-
-            new Triangle3D(new Vector3D(0.5, 0.5, -2), new Vector3D(0.5, 0.5, -1), new Vector3D(0.5, -0.5, -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -2), new Vector3D(0.5, -0.5, -1), new Vector3D(0.5, -0.5, -2)),
-
-            new Triangle3D(new Vector3D(0.5, 0.5, -2), new Vector3D(-0.5, 0.5, -2), new Vector3D(-0.5, 0.5, -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -2), new Vector3D(-0.5, 0.5, -1), new Vector3D(0.5, 0.5, -1)),
-
-            new Triangle3D(new Vector3D(0.5, -0.5, -1), new Vector3D(-0.5, -0.5, -1), new Vector3D(-0.5, -0.5, -2)),
-            new Triangle3D(new Vector3D(0.5, -0.5, -1), new Vector3D(-0.5, -0.5, -2), new Vector3D(0.5, -0.5, -2))
+        Mesh flat = new Mesh(Arrays.asList(
+            new Triangle3D(new Vector3D(0.5, 0.5, -1).scale(5), new Vector3D(-0.5, 0.5, -1).scale(5), new Vector3D(-0.5, -0.5, -1).scale(5)),
+            new Triangle3D(new Vector3D(0.5, 0.5, -1).scale(5), new Vector3D(-0.5, -0.5, -1).scale(5), new Vector3D(0.5, -0.5, -1).scale(5))
         ), Color.BLUE);
 
         Mesh cube2 = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(0.5, 0.5, -1 -1), new Vector3D(-0.5, 0.5, -1 -1), new Vector3D(-0.5, -0.5, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -1 -1), new Vector3D(-0.5, -0.5, -1 -1), new Vector3D(0.5, -0.5, -1 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -1 -1)),
 
-            new Triangle3D(new Vector3D(-0.5, 0.5, -1 -1), new Vector3D(-0.5, 0.5, -2 -1), new Vector3D(-0.5, -0.5, -1 -1)),
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2 -1), new Vector3D(-0.5, -0.5, -2 -1), new Vector3D(-0.5, -0.5, -1 -1)),
+            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
+            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
 
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2 -1), new Vector3D(0.5, 0.5, -2 -1), new Vector3D(0.5, -0.5, -2 -1)),
-            new Triangle3D(new Vector3D(-0.5, 0.5, -2 -1), new Vector3D(0.5, -0.5, -2 -1), new Vector3D(-0.5, -0.5, -2 -1)),
+            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1)),
+            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -2 -1)),
 
-            new Triangle3D(new Vector3D(0.5, 0.5, -2 -1), new Vector3D(0.5, 0.5, -1 -1), new Vector3D(0.5, -0.5, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -2 -1), new Vector3D(0.5, -0.5, -1 -1), new Vector3D(0.5, -0.5, -2 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -1 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -2 -1)),
 
-            new Triangle3D(new Vector3D(0.5, 0.5, -2 -1), new Vector3D(-0.5, 0.5, -2 -1), new Vector3D(-0.5, 0.5, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -2 -1), new Vector3D(-0.5, 0.5, -1 -1), new Vector3D(0.5, 0.5, -1 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -1 -1)),
+            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(0.5, 0.5 -1, -1 -1)),
 
-            new Triangle3D(new Vector3D(0.5, -0.5, -1 -1), new Vector3D(-0.5, -0.5, -1 -1), new Vector3D(-0.5, -0.5, -2 -1)),
-            new Triangle3D(new Vector3D(0.5, -0.5, -1 -1), new Vector3D(-0.5, -0.5, -2 -1), new Vector3D(0.5, -0.5, -2 -1))
+            new Triangle3D(new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -2 -1)),
+            new Triangle3D(new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1))
         ), Color.GREEN);
 
-        meshes.add(cube);
+        meshes.add(flat);
         meshes.add(cube2);
     }
 
 
     @Override
     public void shiftCamera(Vector3D offset) {
-        camera.shift(offset);
+        if ((offset.x() != 0) | (offset.y() != 0) | (offset.z() != 0)) {
+            camera.shift(offset);
+        }
     }
 
     @Override
     public void rotateCamera(double pitch, double yaw) {
-        //double newYaw = camera.yaw() + yaw;
+        double newYaw = camera.yaw() + yaw;
 
-        //if ((-90 <= newYaw) & (newYaw <= 90)) {
-            camera.rotate(pitch, yaw);
-        //}
+        if ((newYaw <= -90) | (90 <= newYaw)) {
+            yaw = 0;
+        }
+
+        camera.rotate(pitch, yaw);
     }
+
+
 
     @Override
     public int tickDelay() {
         return 4;
+    }
+
+    @Override
+    public double sensitivity() {
+        return 2;
     }
 
 

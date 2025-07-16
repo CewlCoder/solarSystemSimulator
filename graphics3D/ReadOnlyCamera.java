@@ -28,5 +28,5 @@ public interface ReadOnlyCamera {
      * @param triangle the 3D triangle to transform
      * @return the transformed triangle
      */
-    Triangle3D transformFromWorldSpaceToCameraSpace(Triangle3D triangle);
+    Triangle3D toCameraSpace(Triangle3D triangle);
 }

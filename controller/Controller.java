@@ -8,7 +8,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.awt.event.MouseEvent;
 
@@ -44,9 +43,9 @@ public class Controller implements KeyListener, MouseMotionListener {
         movementMap.put(KeyEvent.VK_Q, new Vector3D(0, -0.05, 0));
         movementMap.put(KeyEvent.VK_E, new Vector3D(0, 0.05, 0));
 
-        movementMap.put(KeyEvent.VK_W, new Vector3D(0, 0, -0.05));
+        movementMap.put(KeyEvent.VK_W, new Vector3D(0, 0, 0.05));
         movementMap.put(KeyEvent.VK_A, new Vector3D(-0.05, 0, 0));
-        movementMap.put(KeyEvent.VK_S, new Vector3D(0, 0, 0.05));
+        movementMap.put(KeyEvent.VK_S, new Vector3D(0, 0, -0.05));
         movementMap.put(KeyEvent.VK_D, new Vector3D(0.05, 0, 0));
 
         timer.start();
@@ -98,15 +97,10 @@ public class Controller implements KeyListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent event) {
-        List<Double> screenPositions = view.renderer().projector().inverseProject(event.getX(), event.getY());
+        double xDelta = (view.getWidth() / 2.0 - event.getX()) / view.getWidth();
+        double yDelta = (view.getHeight() / 2.0 - event.getY()) / view.getWidth();
 
-        double xScreenSpace = screenPositions.get(0);
-        double yScreenSpace = screenPositions.get(1);
-
-        double rotationX = Math.toDegrees(Math.atan(xScreenSpace));
-        double rotationY = Math.toDegrees(Math.atan(yScreenSpace));
-
-        model.rotateCamera(rotationX, rotationY);
+        model.rotateCamera(xDelta * model.sensitivity(), yDelta * model.sensitivity());
         centerMouse();
     }
 

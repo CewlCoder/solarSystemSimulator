@@ -1,8 +1,5 @@
 package view.renderer;
 
-import java.util.Arrays;
-import java.util.List;
-
 import graphics3D.Triangle3D;
 import graphics3D.Vector3D;
 
@@ -59,14 +56,7 @@ public class Projector {
         return new Vertex2D((int) Math.round(xPixelSpace), (int) Math.round(yPixelSpace), vertex.z());
     }
 
-    public List<Double> inverseProject(int x, int y) {
-        double xScreenSpace = (width / 2 - x) / screenSpaceToPixelSpaceRatio;
-        double yScreenSpace = (y - height / 2) / screenSpaceToPixelSpaceRatio;
-
-        return Arrays.asList(xScreenSpace, yScreenSpace);
-    }
-
-    public Triangle2D projectTriangle(Triangle3D triangle) {
+    public Triangle2D toPixelSpace(Triangle3D triangle) {
         return new Triangle2D(
             project(triangle.a()), 
             project(triangle.b()), 

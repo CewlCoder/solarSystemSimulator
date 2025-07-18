@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -21,7 +22,9 @@ public class Controller implements KeyListener, MouseMotionListener {
     private Timer timer;
     
     private Robot robot;
+
     private Set<Integer> pressedKeys;
+    private Integer accelerationKey;
     private HashMap<Integer, Vector3D> movementMap;
 
     public Controller(ControllableModel model, View view) {
@@ -36,6 +39,7 @@ public class Controller implements KeyListener, MouseMotionListener {
         }
 
         this.pressedKeys = new HashSet<>();
+        this.accelerationKey = KeyEvent.VK_SHIFT;
         this.movementMap = new HashMap<>();
 
         movementMap.put(KeyEvent.VK_Q, new Vector3D(0, -0.05, 0));
@@ -68,6 +72,11 @@ public class Controller implements KeyListener, MouseMotionListener {
             }
         }
 
+        if (pressedKeys.contains(accelerationKey)) {
+            model.shiftCamera(movement.scale(3));
+            return;
+        }
+
         model.shiftCamera(movement);
     }
 
@@ -88,11 +97,13 @@ public class Controller implements KeyListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent event) {
-        int xCenter = view.getWidth() / 2;
-        int yCenter = view.getHeight() / 2;
+        Point panelLocation = view.getLocationOnScreen();
 
-        int xDelta = (event.getXOnScreen() - xCenter);
-        int yDelta = (event.getYOnScreen() - yCenter);
+        int xCenter = panelLocation.x + view.getWidth() / 2;
+        int yCenter = panelLocation.y + view.getHeight() / 2;
+
+        int xDelta = event.getXOnScreen() - xCenter;
+        int yDelta = event.getYOnScreen() - yCenter;
 
         model.rotateCamera(xDelta * model.sensitivity(), yDelta * model.sensitivity());
         robot.mouseMove(xCenter, yCenter);

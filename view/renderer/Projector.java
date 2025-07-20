@@ -51,14 +51,14 @@ public class Projector {
         return true;
     }
 
-    private Vertex2D project(Vector3D vertex) {
+    private ProjectedVector project(Vector3D vertex) {
         double xScreenSpace = -vertex.x() / vertex.z();
         double yScreenSpace = -vertex.y() / vertex.z();
 
         double xPixelSpace = width / 2 + (xScreenSpace * screenSpaceToPixelSpaceRatio);
         double yPixelSpace = height / 2 - (yScreenSpace * screenSpaceToPixelSpaceRatio);
 
-        return new Vertex2D((int) Math.round(xPixelSpace), (int) Math.round(yPixelSpace), vertex.z());
+        return new ProjectedVector((int) Math.round(xPixelSpace), (int) Math.round(yPixelSpace), vertex.z());
     }
 
     /**
@@ -67,8 +67,8 @@ public class Projector {
      * @param triangle the 3D triangle to transform
      * @return the transformed 2D triangle
      */
-    public Triangle2D toPixelSpace(Triangle3D triangle) {
-        return new Triangle2D(
+    public ProjectedTriangle toPixelSpace(Triangle3D triangle) {
+        return new ProjectedTriangle(
             project(triangle.a()), 
             project(triangle.b()), 
             project(triangle.c())

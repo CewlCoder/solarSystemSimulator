@@ -105,9 +105,9 @@ public class Vector3D {
     public double dot(Vector3D other) {
         double sum = 0;
 
-        sum += this.x() * other.x();
-        sum += this.y() * other.y();
-        sum += this.z() * other.z();
+        sum += this.x * other.x();
+        sum += this.y * other.y();
+        sum += this.z * other.z();
 
         return sum;
     }
@@ -120,9 +120,9 @@ public class Vector3D {
     public double length() {
         double sum = 0;
 
-        sum += this.x() * this.x();
-        sum += this.y() * this.y();
-        sum += this.z() * this.z();
+        sum += this.x * this.x();
+        sum += this.y * this.y();
+        sum += this.z * this.z();
 
         return Math.sqrt(sum);
     }
@@ -134,9 +134,9 @@ public class Vector3D {
      * @return the scaled vector
      */
     public Vector3D scale(double factor) {
-        double x = this.x() * factor;
-        double y = this.y() * factor;
-        double z = this.z() * factor;
+        double x = this.x * factor;
+        double y = this.y * factor;
+        double z = this.z * factor;
 
         return new Vector3D(x, y, z);
     }
@@ -148,9 +148,9 @@ public class Vector3D {
      * @return the subtracted vector
      */
     public Vector3D subtract(Vector3D other) {
-        double x = this.x() - other.x();
-        double y = this.y() - other.y();
-        double z = this.z() - other.z();
+        double x = this.x - other.x();
+        double y = this.y - other.y();
+        double z = this.z - other.z();
 
         return new Vector3D(x, y, z);
     }
@@ -162,9 +162,9 @@ public class Vector3D {
      * @return the added vector
      */
     public Vector3D add(Vector3D other) {
-        double x = this.x() + other.x();
-        double y = this.y() + other.y();
-        double z = this.z() + other.z();
+        double x = this.x + other.x();
+        double y = this.y + other.y();
+        double z = this.z + other.z();
 
         return new Vector3D(x, y, z);
     }

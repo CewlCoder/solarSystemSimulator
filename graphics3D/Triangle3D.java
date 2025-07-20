@@ -1,8 +1,5 @@
 package graphics3D;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Triangle3D {
     private Vector3D a;
     private Vector3D b;
@@ -27,8 +24,8 @@ public class Triangle3D {
      * 
      * @return this triangle's vertices
      */
-    public List<Vector3D> vertices() {
-        return Arrays.asList(a, b, c);
+    public Vector3D[] vertices() {
+        return new Vector3D[] {a, b, c};
     }
 
     /**

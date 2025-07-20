@@ -3,8 +3,7 @@ package view.renderer;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import graphics3D.Mesh;
 import graphics3D.ReadOnlyCamera;
@@ -15,7 +14,7 @@ public class Renderer {
     private int height;
 
     private BufferedImage pixelBuffer;
-    private List<List<Double>> depthBuffer;
+    private double[][] depthBuffer;
 
     private ReadOnlyCamera camera;
     private Projector projector;
@@ -25,7 +24,9 @@ public class Renderer {
         this.height = height;
 
         this.pixelBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.depthBuffer = new ArrayList<>();
+        this.depthBuffer = new double[height][width];
+
+        clearDepthBuffer();
 
         this.camera = camera;
         this.projector = new Projector(width, height, camera.fov());
@@ -33,25 +34,30 @@ public class Renderer {
 
 
 
-    private void drawColumn(int column, int xMinTriangleBound, int xMaxTriangleBound, Color color) {
-        for (int x = xMinTriangleBound; x < xMaxTriangleBound; x++) {
-            pixelBuffer.setRGB(x, column, color.getRGB());
+    private void drawColumn(ProjectedTriangle pixelSpaceTriangle, int y, Color color) {
+        int[] Intersections = pixelSpaceTriangle.lineIntersections(y);
+
+        int xMinIntersection = Intersections[0];
+        int xMaxIntersection = Intersections[1];
+
+        for (int x = xMinIntersection + 1; x < xMaxIntersection + 1; x++) {
+            double depth = pixelSpaceTriangle.depth(x, y);
+
+            if (depthBuffer[y][x] < depth) {
+                pixelBuffer.setRGB(x, y, color.getRGB());
+                depthBuffer[y][x] = depth;
+            }
         }
     }
 
-    private void drawToPixelBuffer(Triangle2D pixelSpaceTriangle, Color color) {
-        List<Integer> verticalTriangleBoundingBox = pixelSpaceTriangle.verticalBoundingBox();
+    private void drawToPixelBuffer(ProjectedTriangle pixelSpaceTriangle, Color color) {
+        int[] verticalTriangleBoundingBox = pixelSpaceTriangle.verticalBoundingBox();
 
-        int yMinBound = verticalTriangleBoundingBox.get(0);
-        int yMaxBound = verticalTriangleBoundingBox.get(1);
+        int yMinBound = verticalTriangleBoundingBox[0];
+        int yMaxBound = verticalTriangleBoundingBox[1];
 
-        for (int y = yMaxBound; y > yMinBound; y--) {
-            List<Integer> Intersections = pixelSpaceTriangle.lineIntersections(y);
-
-            int xMinIntersection = Intersections.get(0);
-            int xMaxIntersection = Intersections.get(1);
-
-            drawColumn(y, xMinIntersection, xMaxIntersection, color);
+        for (int y = yMinBound + 1; y < yMaxBound + 1; y++) {
+            drawColumn(pixelSpaceTriangle, y, color);
         }
     }
 
@@ -65,11 +71,18 @@ public class Renderer {
             Triangle3D cameraSpaceTriangle = camera.toCameraSpace(triangle);
             if (!projector.isWithinViewThrustum(cameraSpaceTriangle)) continue;
 
-            Triangle2D pixelSpaceTriangle = projector.toPixelSpace(cameraSpaceTriangle);
+            ProjectedTriangle pixelSpaceTriangle = projector.toPixelSpace(cameraSpaceTriangle);
             drawToPixelBuffer(pixelSpaceTriangle, mesh.color());
         }
     }
 
+
+
+    private void clearDepthBuffer() {
+        for (int y = 0; y < height; y++) {
+            Arrays.fill(depthBuffer[y], Double.NEGATIVE_INFINITY);
+        }
+    }
 
     /**
      * Clears the image.
@@ -80,6 +93,8 @@ public class Renderer {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, width, height);
         graphics.dispose();
+
+        clearDepthBuffer();
     }
 
     /**

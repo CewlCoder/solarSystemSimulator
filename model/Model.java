@@ -22,9 +22,14 @@ public class Model implements ControllableModel, ViewableModel {
         this.camera = new Camera(110);
 
         Mesh flat = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(0.5, 0.5, -1).scale(5), new Vector3D(-0.5, 0.5, -1).scale(5), new Vector3D(-0.5, -0.5, -1).scale(5)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -1).scale(5), new Vector3D(-0.5, -0.5, -1).scale(5), new Vector3D(0.5, -0.5, -1).scale(5))
+            new Triangle3D(new Vector3D(0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, -0.5, -0.5).scale(5)),
+            new Triangle3D(new Vector3D(0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, -0.5, -0.5).scale(5), new Vector3D(0.5, -0.5, -0.5).scale(5))
         ), Color.BLUE);
+
+        Mesh freaky = new Mesh(Arrays.asList(
+            new Triangle3D(new Vector3D(1, 2, -4), new Vector3D(4, 2, -1), new Vector3D(6, 7, -2)),
+            new Triangle3D(new Vector3D(6, 1, 5), new Vector3D(7, 2, -3), new Vector3D(6, 7, -2))
+        ), Color.RED);
 
         Mesh cube2 = new Mesh(Arrays.asList(
             new Triangle3D(new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
@@ -47,6 +52,7 @@ public class Model implements ControllableModel, ViewableModel {
         ), Color.GREEN);
 
         meshes.add(flat);
+        meshes.add(freaky);
         meshes.add(cube2);
     }
 

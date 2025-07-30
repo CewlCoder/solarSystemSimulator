@@ -2,58 +2,59 @@ package model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import controller.ControllableModel;
 import graphics3D.Camera;
-import graphics3D.Mesh;
 import graphics3D.ReadOnlyCamera;
-import graphics3D.Triangle3D;
 import graphics3D.Vector3D;
 import view.ViewableModel;
 
 public class Model implements ControllableModel, ViewableModel {
-    private List<Mesh> meshes;
     private Camera camera;
 
+    private List<Planet> gravtiyAffectedPlanets;
+    private List<Planet> gravtiyProducingPlanets;
+
     public Model() {
-        this.meshes = new ArrayList<>();
         this.camera = new Camera(110);
 
-        Mesh flat = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, -0.5, -0.5).scale(5)),
-            new Triangle3D(new Vector3D(0.5, 0.5, -0.5).scale(5), new Vector3D(-0.5, -0.5, -0.5).scale(5), new Vector3D(0.5, -0.5, -0.5).scale(5))
-        ), Color.BLUE);
+        this.gravtiyAffectedPlanets = new ArrayList<>();
+        this.gravtiyProducingPlanets = new ArrayList<>();
 
-        Mesh freaky = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(1, 2, -4), new Vector3D(4, 2, -1), new Vector3D(6, 7, -2)),
-            new Triangle3D(new Vector3D(6, 1, 5), new Vector3D(7, 2, -3), new Vector3D(6, 7, -2))
-        ), Color.RED);
+        Planet planet = Planet.newPlanet(new Vector3D(0, 0, 0), 0.5, Color.RED);
+        planet.setMass(1_000_000_000);
+        gravtiyProducingPlanets.add(planet);
 
-        Mesh cube2 = new Mesh(Arrays.asList(
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -1 -1)),
+        for (int i = 0; i < 2000; i++) {
+            Random rand = new Random();
 
-            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
-            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -1 -1)),
+            int min = -25;
+            int max = 25;
 
-            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1)),
-            new Triangle3D(new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1), new Vector3D(-0.5, -0.5 -1, -2 -1)),
+            double x = rand.nextDouble(max - min) + min;
+            double y = rand.nextDouble(max - min) + min;
+            double z = rand.nextDouble(max - min) + min;
 
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, 0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(0.5, -0.5 -1, -2 -1)),
+            int r = rand.nextInt(255);
+            int g = rand.nextInt(255);
+            int b = rand.nextInt(255);
 
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -1 -1)),
-            new Triangle3D(new Vector3D(0.5, 0.5 -1, -2 -1), new Vector3D(-0.5, 0.5 -1, -1 -1), new Vector3D(0.5, 0.5 -1, -1 -1)),
+            Planet bigPlanet = planet;
+            Planet smallPlanet = Planet.newPlanet(new Vector3D(x, y, 0), 0.1, new Color(r, g, b));
 
-            new Triangle3D(new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -2 -1)),
-            new Triangle3D(new Vector3D(0.5, -0.5 -1, -1 -1), new Vector3D(-0.5, -0.5 -1, -2 -1), new Vector3D(0.5, -0.5 -1, -2 -1))
-        ), Color.GREEN);
+            Vector3D bigPlanetToSmallPlanet = bigPlanet.distanceToOther(smallPlanet);
 
-        meshes.add(flat);
-        meshes.add(freaky);
-        meshes.add(cube2);
+            Vector3D randomVector = new Vector3D(rand.nextInt(), rand.nextInt(), rand.nextInt());
+            //Vector3D randomVelocityDirection = bigPlanetToSmallPlanet.cross(randomVector).normalize();
+            Vector3D randomVelocityDirection = new Vector3D(-bigPlanetToSmallPlanet.y(), bigPlanetToSmallPlanet.x(), 0).normalize();
+
+            Vector3D initialVelocity = randomVelocityDirection.scale(Math.sqrt(PhysicsConstants.BIG_G * bigPlanet.mass() / bigPlanetToSmallPlanet.length()));
+
+            smallPlanet.applyVelocity(initialVelocity);
+            gravtiyAffectedPlanets.add(smallPlanet);
+        }
     }
 
 
@@ -72,10 +73,25 @@ public class Model implements ControllableModel, ViewableModel {
             yaw = 0;
         }
 
-        camera.rotate(pitch, yaw);
+        if ((pitch != 0) | (yaw != 0)) {
+            camera.rotate(pitch, yaw);
+        }
     }
 
 
+    private void applyGravityFromAllProducers(Planet affectedPlanet) {
+        for (Planet planet : gravtiyProducingPlanets) {
+            affectedPlanet.applyGravity(planet);
+            affectedPlanet.updatePosition();
+        }
+    }
+
+    @Override
+    public void gameTick() {
+        for (Planet affected : gravtiyAffectedPlanets) {
+            applyGravityFromAllProducers(affected);
+        }
+    }
 
     @Override
     public int tickDelay() {
@@ -94,7 +110,10 @@ public class Model implements ControllableModel, ViewableModel {
     }
 
     @Override
-    public List<Mesh> meshes() {
-        return meshes;
+    public List<Planet> planets() {
+        List<Planet> planets = new ArrayList<>(gravtiyAffectedPlanets);
+        planets.addAll(gravtiyProducingPlanets);
+
+        return planets;
     }
 }

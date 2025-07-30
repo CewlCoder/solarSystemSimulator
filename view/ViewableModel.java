@@ -2,16 +2,16 @@ package view;
 
 import java.util.List;
 
-import graphics3D.Mesh;
 import graphics3D.ReadOnlyCamera;
+import model.Planet;
 
 public interface ViewableModel {
     /**
-     * Returns a list of all the meshes within the model.
+     * Returns a list of all the planets within the model.
      * 
-     * @return a list of all meshes within model
+     * @return a list of all planets within model
      */
-    List<Mesh> meshes();
+    List<Planet> planets();
 
     /**
      * Returns a read-only version of the camera.

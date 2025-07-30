@@ -7,8 +7,8 @@ public class Projector {
     private int width;
     private int height;
 
-    private final double FARCLIP = -500;
-    private final double NEARCLIP = -5;
+    private final double FAR_CLIP = -500;
+    private final double NEAR_CLIP = 0;
 
     private double screenSpaceWidth;
     private double screenSpaceHeight;
@@ -41,7 +41,7 @@ public class Projector {
      */
     public boolean isWithinViewThrustum(Triangle3D triangle) {
         for (Vector3D vertex : triangle.vertices()) {
-            if ((NEARCLIP <= vertex.z()) | (vertex.z() <= FARCLIP)) return false;
+            if ((NEAR_CLIP <= vertex.z()) | (vertex.z() <= FAR_CLIP)) return false;
 
             double xMin = screenSpaceWidth / 2 * vertex.z();
             double xMax = -xMin;

@@ -17,7 +17,7 @@ public class Camera implements ReadOnlyCamera {
      * @param fov the fov of the camera
      */
     public Camera(double fov) {
-        this.position = new Vector3D(0, 0, 0);
+        this.position = new Vector3D(0, 0, 50);
 
         this.originalXAxis = new Vector3D(1, 0, 0);
         this.originalYAxis = new Vector3D(0, 1, 0);

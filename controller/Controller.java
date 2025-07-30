@@ -58,6 +58,7 @@ public class Controller implements KeyListener, MouseMotionListener {
 
     private void gameTick(ActionEvent event) {
         updateMovement();
+        model.gameTick();
         view.repaint();
     }
 

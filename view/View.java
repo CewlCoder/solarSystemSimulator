@@ -40,8 +40,8 @@ public class View extends JPanel {
 
         renderer.clearImage();
 
-        for (Mesh mesh : model.meshes()) {
-            renderer.renderMesh(mesh);
+        for (Mesh planet : model.planets()) {
+            renderer.renderMesh(planet);
         }
 
         renderer.displayImage(graphics);

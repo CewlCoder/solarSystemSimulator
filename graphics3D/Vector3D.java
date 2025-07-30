@@ -55,9 +55,9 @@ public class Vector3D {
      * @return the transformed vector
      */
     public Vector3D toBasis(Vector3D localX, Vector3D localY, Vector3D localZ) {
-        Vector3D x = localX.scale(this.x());
-        Vector3D y = localY.scale(this.y());
-        Vector3D z = localZ.scale(this.z());
+        Vector3D x = localX.scale(this.x);
+        Vector3D y = localY.scale(this.y);
+        Vector3D z = localZ.scale(this.z);
 
         return x.add(y).add(z);
     }
@@ -112,6 +112,14 @@ public class Vector3D {
         return sum;
     }
 
+    public Vector3D cross(Vector3D other) {
+        double x = this.y * other.z() - this.z * other.y();
+        double y = this.z * other.x() - this.x * other.z();
+        double z = this.x * other.y() - this.y * other.x();
+
+        return new Vector3D(x, y, z);
+    }
+
     /**
      * Calculates the length of this vector.
      * 
@@ -125,6 +133,10 @@ public class Vector3D {
         sum += this.z * this.z();
 
         return Math.sqrt(sum);
+    }
+
+    public Vector3D normalize() {
+        return scale(1 / length());
     }
 
     /**

@@ -40,10 +40,11 @@ public class Renderer {
         int xMinIntersection = Intersections[0];
         int xMaxIntersection = Intersections[1];
 
-        for (int x = xMinIntersection + 1; x < xMaxIntersection + 1; x++) {
+        //This should be xMinIntersection + 1, but looks better with the additional pixels being drawn over (for our case).
+        for (int x = xMinIntersection; x < xMaxIntersection; x++) {
             double depth = pixelSpaceTriangle.depth(x, y);
 
-            if (depthBuffer[y][x] < depth) {
+            if (depthBuffer[y][x] <= depth) {
                 pixelBuffer.setRGB(x, y, color.getRGB());
                 depthBuffer[y][x] = depth;
             }
@@ -56,7 +57,7 @@ public class Renderer {
         int yMinBound = verticalTriangleBoundingBox[0];
         int yMaxBound = verticalTriangleBoundingBox[1];
 
-        for (int y = yMinBound + 1; y < yMaxBound + 1; y++) {
+        for (int y = yMinBound + 1; y < yMaxBound; y++) {
             drawColumn(pixelSpaceTriangle, y, color);
         }
     }
